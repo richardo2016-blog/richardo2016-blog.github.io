@@ -1,0 +1,49 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "chrome": 33,
+          "browsers": [
+            "safari >= 8"
+          ]
+        },
+        "useBuiltIns": "usage",
+        "modules": false,
+        "exclude": [
+          "transform-async-to-generator"
+        ],
+        "debug": false
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-es2015-modules-umd",
+    "fast-async",
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+        "moduleName": "babel-runtime"
+      }
+    ],
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    [
+      "transform-builtin-extend",
+      {
+        "globals": [
+          "Error",
+          "Array"
+        ],
+        "approximate": true
+      }
+    ],
+    "transform-vue-jsx",
+    "syntax-jsx"
+  ],
+  "comments": false
+}

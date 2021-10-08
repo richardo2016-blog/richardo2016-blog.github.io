@@ -1,0 +1,36 @@
+html
+  head
+  body
+    :markdown-it
+      我是博客中静态的问题, 博客内容的末尾会有一个使用 vue 来处理的、具有交互性的区域, 用于说明博客中讲解的内容.
+
+    #vue-app
+
+    script(type="text/x-template" id="component-tpl").
+      <div>
+        我是具有交互性的内容
+        <div>
+          <input v-model="inputstr" />
+        </div>
+        <div>
+          我输入的值 
+        </div>
+      </div>
+
+    <script>
+      :babel
+        let inputstr = window.preStr
+        if (typeof inputstr !== 'string') {
+          inputstr = ''
+        }
+
+        const app = new Vue({
+          el: '#vue-app',
+          data () {
+            return {
+              inputstr
+            }
+          },
+          template: '#component-tpl'
+        })
+    </script>
