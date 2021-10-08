@@ -1,0 +1,305 @@
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Pug 在线解析器
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><meta name="description" content="本工具需要本地启用对应的服务器方可使用 (function (global, factory) {   if (typeof define &#x3D;&#x3D;&#x3D; &quot;function&quot; &amp;&amp; define.amd) {     define([], factory);   } else if (typeof exports !&#x3D;&#x3D; &quot;undefined&quot;) {     factory();   } else {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pug 在线解析器">
+<meta property="og:url" content="http://blog-next.chenlei.me/2018/01/28/pug-parser/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本工具需要本地启用对应的服务器方可使用 (function (global, factory) {   if (typeof define &#x3D;&#x3D;&#x3D; &quot;function&quot; &amp;&amp; define.amd) {     define([], factory);   } else if (typeof exports !&#x3D;&#x3D; &quot;undefined&quot;) {     factory();   } else {">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-28T12:17:59.000Z">
+<meta property="article:modified_time" content="2021-10-08T12:37:12.825Z">
+<meta property="article:author" content="Richardo">
+<meta property="article:tag" content="private">
+<meta name="twitter:card" content="summary">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml"/>
+  <link rel="icon" href="/favicon.png"/>
+  <link rel="stylesheet" href="//w3cbaymax.oss-cn-shanghai.aliyuncs.com/felib/fonts/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/css/style.css?t=1633697174316"/>
+  <link rel="stylesheet" href="https://unpkg.com/codemirror@5.33.0/lib/codemirror.css"/>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.runtime.min.js"></script>
+  <script src="https://unpkg.com/codemirror@5.33.0/lib/codemirror.js"></script>
+  <script src="https://unpkg.com/codemirror@5.33.0/mode/pug/pug.js"></script>
+  <script src="https://unpkg.com/codemirror@5.33.0/keymap/sublime.js"></script>
+  <script src="https://unpkg.com/codemirror@5.33.0/addon/search/searchcursor.js"></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <div id="container">
+      <div id="wrap">
+<header id="header">
+  <div id="banner"></div>
+  <div class="outer" id="header-outer">
+    <div class="inner" id="header-title">
+      <h1 id="logo-wrap"><a href="/" id="logo">RAY</a></h1>
+      <h2 id="subtitle-wrap"><a href="/" id="subtitle"><span role="text">在平坦的路面上曲折前行</span></a></h2>
+    </div>
+    <div class="inner" id="header-inner">
+      <nav id="main-nav"><a class="nav-icon" id="main-nav-toggle"></a><a class="main-nav-link" href="/">首页</a><a class="main-nav-link" href="/archives">归档</a><a class="main-nav-link" href="/cv">简历</a>
+      </nav>
+      <nav id="sub-nav"><a class="nav-icon" id="nav-rss-link" href="/atom.xml" title="RSS 订阅"></a><a class="nav-icon" id="nav-search-btn" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap"><form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog-next.chenlei.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+        <div class="outer">
+          <section id="main">
+<article class="article article-typepost" id="post-pug-parser" itemscope="itemscope" itemprop="blogPost">
+  <div class="article-meta"><a class="article-date" href="/2018/01/28/pug-parser/">
+  <time datetime="2018-01-28T12:17:59.000Z" itemprop="datePublished">2018-01-28
+  </time></a>
+  </div>
+  <div class="article-inner">
+    <header class="article-header">
+<div class="flex-v-center-j-between">
+  <h1 class="article-title" itemprop="name">Pug 在线解析器
+  </h1>
+</div>
+    </header>
+    <div class="article-entry" itemprop="articleBody">
+<p>本工具需要本地启用对应的服务器方可使用</p>
+<div id="src-code"></div><script>(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define([], factory);
+  } else if (typeof exports !== "undefined") {
+    factory();
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory();
+    global.pugParser = mod.exports;
+  }
+})(this, function () {
+  'use strict';
+
+  var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  var PUG_ELE_SERVER = !!window.localStorage.getItem('PUG_ELE_SERVER');
+  var client = axios.create({
+    baseURL: PUG_ELE_SERVER ? 'https://ssr.ele.me/vas-stats' : 'http://localhost:3001',
+    timeout: 1000,
+
+    responseType: 'json',
+    maxContentLength: Math.pow(1024, 2)
+  });
+  new Vue({
+    el: '#src-code',
+    data: function data() {
+      return {
+        rawPugSource: 'div',
+        parsedHtml: ''
+      };
+    },
+
+    methods: {
+      parsePugSrc: function parsePugSrc() {
+        var _this = this;
+
+        var postRaw = this.rawPugSource.trim();
+        return client.request({
+          url: '/pug',
+          method: 'POST',
+          data: {
+            raw: postRaw
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.data;
+        }).then(function (res) {
+          _this.parsedHtml = res.html;
+          if (_this.parsedHtmlCM) {
+            _this.parsedHtmlCM.setValue(res.html);
+          }
+        }).catch(function (e) {
+          console.log('response.error', e);
+        });
+      },
+      _initCM: function _initCM() {
+        var _this2 = this;
+
+        if (!this.$refs.sourcetext) return;
+
+        var CM_OPTS = {
+          lineNumbers: true,
+          indentUnit: 2,
+          tabSize: 2
+        };
+
+        var parsedHtmlCM = this.parsedHtmlCM = CodeMirror.fromTextArea(this.$refs.parsedtext, _extends({
+          mode: 'html',
+          readOnly: true
+        }, CM_OPTS));
+
+        var sourceCM = this.sourceCM = CodeMirror.fromTextArea(this.$refs.sourcetext, _extends({
+          mode: 'pug',
+          keyMap: 'sublime'
+        }, CM_OPTS));
+
+        sourceCM.setOption('extraKeys', {
+          Tab: function Tab(cm) {
+            var spaces = Array(cm.getOption('indentUnit') + 1).join(' ');
+            cm.replaceSelection(spaces);
+          }
+        });
+
+        sourceCM.on('change', function (cm, changeObj) {
+          _this2.rawPugSource = cm.getValue();
+          _this2.parsePugSrc();
+          console.log('codemirror:change', _this2.rawPugSource);
+        });
+
+        sourceCM.setValue(this.rawPugSource);
+      }
+    },
+    render: function render() {
+      var _this3 = this;
+
+      var h = arguments[0];
+
+      return h(
+        'div',
+        null,
+        [h(
+          'textarea',
+          { ref: 'sourcetext' },
+          []
+        ), h(
+          'div',
+          { 'class': 'mt-sm' },
+          []
+        ), h(
+          'textarea',
+          { ref: 'parsedtext', style: 'width: 100%' },
+          []
+        ), h(
+          'div',
+          null,
+          [h(
+            'button',
+            {
+              class: 'J_send_btn',
+              on: {
+                click: function click() {
+                  console.log('clicked');
+                  _this3.parsePugSrc();
+                }
+              }
+            },
+            ['\u89E3\u6790']
+          )]
+        )]
+      );
+    },
+    created: function created() {},
+    mounted: function mounted() {
+      this._initCM();
+    }
+  });
+});</script>
+    </div>
+    <footer class="article-footer"><a class="article-share-link" data-url="http://blog-next.chenlei.me/2018/01/28/pug-parser/" data-id="ckuid44fd0015pwnmboxz61h8">分享</a><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/private/" rel="tag">private</a></li></ul>
+    </footer>
+  </div>
+<nav id="article-nav"><a class="article-nav-link-wrap" id="article-nav-newer" href="/2018/02/03/24-years-old/"><strong class="article-nav-caption">Newer</strong>
+    <div class="article-nav-title">轮回
+    </div></a><a class="article-nav-link-wrap" id="article-nav-older" href="/2018/01/21/left-displacement/"><strong class="article-nav-caption">Older</strong>
+    <div class="article-nav-title">一路向西
+    </div></a>
+</nav>
+</article>
+          </section>
+<aside class="http" id="sidebar">
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6/" rel="tag">es6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-fix/" rel="tag">js-fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-trick/" rel="tag">js-trick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-utils/" rel="tag">js-utils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/json-iterator/" rel="tag">json-iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meltdown/" rel="tag">meltdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/private/" rel="tag">private</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pug/" rel="tag">pug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rxjs/" rel="tag">rxjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B4%E8%AE%B0/" rel="tag">年记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" rel="tag">纯函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/golang/" style="font-size: 20px;">golang</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/js-fix/" style="font-size: 10px;">js-fix</a> <a href="/tags/js-trick/" style="font-size: 10px;">js-trick</a> <a href="/tags/js-utils/" style="font-size: 10px;">js-utils</a> <a href="/tags/json-iterator/" style="font-size: 10px;">json-iterator</a> <a href="/tags/meltdown/" style="font-size: 10px;">meltdown</a> <a href="/tags/private/" style="font-size: 10px;">private</a> <a href="/tags/pug/" style="font-size: 10px;">pug</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/%E5%B9%B4%E8%AE%B0/" style="font-size: 10px;">年记</a> <a href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" style="font-size: 10px;">纯函数</a> <a href="/tags/%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">翻译</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 20px;">随笔</a>
+    </div>
+  </div>
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/04/simple-mac-app-compiled-with-gcc/">使用 GCC 编译简单的 Mac App</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/11/barkjs/you-might-not-need-vue-sfc/">你可能不需要 *.vue</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/03/24-years-old/">轮回</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/28/pug-parser/">Pug 在线解析器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/21/left-displacement/">一路向西</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+</aside>
+        </div>
+<footer id="footer">
+  <div class="outer">
+    <div class="inner" id="footer-info">&copy;2021&nbsp;Xeon&nbsp;运行于&nbsp;<a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+      </div>
+<div id="mobile-nav"><a class="mobile-nav-link" href="/">首页</a><a class="mobile-nav-link" href="/archives">归档</a><a class="mobile-nav-link" href="/cv">简历</a>
+</div><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/js/script.js"></script>
+
+    </div>
+  </body>
+</html>

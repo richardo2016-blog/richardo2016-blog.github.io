@@ -1,0 +1,157 @@
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>忽然想起的 material-ui
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><meta name="description" content="时隔两年（竟然这么久了……）重新认真看 React 和使用 material-ui ，我感到除了随着 react 版本迭代而带来的内部计算和渲染机制，material-ui 有些两年前（0.13.3 版本）我认为是缺点的东西……在现在的 0.19.x 依然被我认为是缺点。 比如，对组件内使用 inline-style 谜一样的坚持却不给予足够的状态机描述，或者在关键的地方留下扩展口（比如我要定制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="忽然想起的 material-ui">
+<meta property="og:url" content="http://blog-next.chenlei.me/2017/10/05/material-ui-review/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="时隔两年（竟然这么久了……）重新认真看 React 和使用 material-ui ，我感到除了随着 react 版本迭代而带来的内部计算和渲染机制，material-ui 有些两年前（0.13.3 版本）我认为是缺点的东西……在现在的 0.19.x 依然被我认为是缺点。 比如，对组件内使用 inline-style 谜一样的坚持却不给予足够的状态机描述，或者在关键的地方留下扩展口（比如我要定制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-10-05T12:22:15.000Z">
+<meta property="article:modified_time" content="2021-10-08T12:17:07.085Z">
+<meta property="article:author" content="Richardo">
+<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml"/>
+  <link rel="icon" href="/favicon.png"/>
+  <link rel="stylesheet" href="//w3cbaymax.oss-cn-shanghai.aliyuncs.com/felib/fonts/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/css/style.css?t=1633697174329"/>
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <div id="container">
+      <div id="wrap">
+<header id="header">
+  <div id="banner"></div>
+  <div class="outer" id="header-outer">
+    <div class="inner" id="header-title">
+      <h1 id="logo-wrap"><a href="/" id="logo">RAY</a></h1>
+      <h2 id="subtitle-wrap"><a href="/" id="subtitle"><span role="text">在平坦的路面上曲折前行</span></a></h2>
+    </div>
+    <div class="inner" id="header-inner">
+      <nav id="main-nav"><a class="nav-icon" id="main-nav-toggle"></a><a class="main-nav-link" href="/">首页</a><a class="main-nav-link" href="/archives">归档</a><a class="main-nav-link" href="/cv">简历</a>
+      </nav>
+      <nav id="sub-nav"><a class="nav-icon" id="nav-rss-link" href="/atom.xml" title="RSS 订阅"></a><a class="nav-icon" id="nav-search-btn" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap"><form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog-next.chenlei.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+        <div class="outer">
+          <section id="main">
+<article class="article article-typepost" id="post-material-ui-review" itemscope="itemscope" itemprop="blogPost">
+  <div class="article-meta"><a class="article-date" href="/2017/10/05/material-ui-review/">
+  <time datetime="2017-10-05T12:22:15.000Z" itemprop="datePublished">2017-10-05
+  </time></a>
+  </div>
+  <div class="article-inner">
+    <header class="article-header">
+<div class="flex-v-center-j-between">
+  <h1 class="article-title" itemprop="name">忽然想起的 material-ui
+  </h1>
+</div>
+    </header>
+    <div class="article-entry" itemprop="articleBody"><p>时隔两年（竟然这么久了……）重新认真看 React 和使用 <code>material-ui</code> ，我感到除了随着 react 版本迭代而带来的内部计算和渲染机制，<code>material-ui</code> 有些两年前（0.13.3 版本）我认为是缺点的东西……在现在的 0.19.x 依然被我认为是缺点。</p>
+<p>比如，对组件内使用 inline-style 谜一样的坚持却不给予足够的状态机描述，或者在关键的地方留下扩展口（比如我要定制 Tabs 的 Tab item 的宽度、高亮状态就比较麻烦，写得很 hack）。</p>
+<p>又比如，<code>material-ui</code> 不提供在组件的关键位置，比如某个节点的 before、after ，接入的机制。</p>
+<p>再比如，关联组件绑定得太死，子组件的可替换性太差（还是 Tabs 的例子，由于第二点说的缺乏关键位置接入机制，有时候就不得不考虑通过特殊的 children item 来 hack 想达到的效果，但 Tabs 内部的 children 必须是名为 Tab 的组件数组，而且这一点你只有看源代码才知道，并且在文档里它并不会告诉你只要实现 Tab 的相关接口就可以让 Tabs 接纳这个 Tab 组件。这个缺点很主观，我是这么看的：由于 React 极早就引入了 context 机制（vue 在 2.2 以后的版本才有对应的特性），这种关联的父子组件应该早就有较好的社区 best practice 了才对，Tabs 不应该被做成这种字面意义耦合实际上不耦合的形式。</p>
+<p><code>material-ui</code> v1-beta 在开发中了，全面引入了 typescript 做 interface restraint，每个组件我还没细看。</p>
+<p><code>material-ui</code> 是我入职后第一份工作使用的第一个组件库，也是我入门 React 的第一个组件库。必须要感谢孙老师和文哥 😁 一位负责挖坑带我跳，另一位负责把坑挖得更深然后带我一起填。孙老师把 scaffold 搭好的时候我是懵逼的，JSX 看得我眼花缭乱；后来我就模仿文哥改写 <code>material-ui</code> 现有的组件，然后把写得不好的地方推锅出去 🌝</p>
+<p>记得使用 <code>material-ui</code> 0.13.3 开发后台的时候，有一些地方当初 hack 得很痛苦。这次重新使用 0.19.x 来写东西，我觉得顺畅多了，因为很多 API 恰好是从 0.13.4 开始被认真考虑和设计过了。另外，一些当时我抓耳挠腮也想不到比较优雅的方式解决的场景，现在会能快一些找到思路去做，因为我进步了 😊</p>
+<h3 id="附"><a href="#附" class="headerlink" title="附"></a>附</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/callemall/material-ui">material-ui github</a></li>
+<li><a target="_blank" rel="noopener" href="https://material-ui.com/">material-ui</a></li>
+<li><a target="_blank" rel="noopener" href="https://material.io/icons/">material icons</a></li>
+</ul>
+
+    </div>
+    <footer class="article-footer"><a class="article-share-link" data-url="http://blog-next.chenlei.me/2017/10/05/material-ui-review/" data-id="ckuid44fb000zpwnmerhw02rr">分享</a><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </footer>
+  </div>
+<nav id="article-nav"><a class="article-nav-link-wrap" id="article-nav-newer" href="/2018/01/08/abuse-of-destructing-assignment/"><strong class="article-nav-caption">Newer</strong>
+    <div class="article-nav-title">“滥用”解构语法
+    </div></a><a class="article-nav-link-wrap" id="article-nav-older" href="/2017/10/02/know-about-fall/"><strong class="article-nav-caption">Older</strong>
+    <div class="article-nav-title">知秋
+    </div></a>
+</nav>
+</article>
+          </section>
+<aside class="http" id="sidebar">
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6/" rel="tag">es6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-fix/" rel="tag">js-fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-trick/" rel="tag">js-trick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-utils/" rel="tag">js-utils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/json-iterator/" rel="tag">json-iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meltdown/" rel="tag">meltdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/private/" rel="tag">private</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pug/" rel="tag">pug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rxjs/" rel="tag">rxjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B4%E8%AE%B0/" rel="tag">年记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" rel="tag">纯函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/golang/" style="font-size: 20px;">golang</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/js-fix/" style="font-size: 10px;">js-fix</a> <a href="/tags/js-trick/" style="font-size: 10px;">js-trick</a> <a href="/tags/js-utils/" style="font-size: 10px;">js-utils</a> <a href="/tags/json-iterator/" style="font-size: 10px;">json-iterator</a> <a href="/tags/meltdown/" style="font-size: 10px;">meltdown</a> <a href="/tags/private/" style="font-size: 10px;">private</a> <a href="/tags/pug/" style="font-size: 10px;">pug</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/%E5%B9%B4%E8%AE%B0/" style="font-size: 10px;">年记</a> <a href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" style="font-size: 10px;">纯函数</a> <a href="/tags/%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">翻译</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 20px;">随笔</a>
+    </div>
+  </div>
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/04/simple-mac-app-compiled-with-gcc/">使用 GCC 编译简单的 Mac App</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/11/barkjs/you-might-not-need-vue-sfc/">你可能不需要 *.vue</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/03/24-years-old/">轮回</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/28/pug-parser/">Pug 在线解析器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/21/left-displacement/">一路向西</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+</aside>
+        </div>
+<footer id="footer">
+  <div class="outer">
+    <div class="inner" id="footer-info">&copy;2021&nbsp;Xeon&nbsp;运行于&nbsp;<a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+      </div>
+<div id="mobile-nav"><a class="mobile-nav-link" href="/">首页</a><a class="mobile-nav-link" href="/archives">归档</a><a class="mobile-nav-link" href="/cv">简历</a>
+</div><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/js/script.js"></script>
+
+    </div>
+  </body>
+</html>

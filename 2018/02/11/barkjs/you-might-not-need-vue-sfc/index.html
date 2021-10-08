@@ -1,0 +1,283 @@
+
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>你可能不需要 *.vue
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/><meta name="description" content="我只是要写个简单的 html 页面, 里面需要运行一些 js 来操作 DOM&#x2F;BOM, 如果可能, 我希望利用 vue runtime">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你可能不需要 *.vue">
+<meta property="og:url" content="http://blog-next.chenlei.me/2018/02/11/barkjs/you-might-not-need-vue-sfc/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="我只是要写个简单的 html 页面, 里面需要运行一些 js 来操作 DOM&#x2F;BOM, 如果可能, 我希望利用 vue runtime">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-02-11T07:44:14.000Z">
+<meta property="article:modified_time" content="2021-10-08T12:17:07.083Z">
+<meta property="article:author" content="Richardo">
+<meta property="article:tag" content="pug">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="js">
+<meta property="article:tag" content="纯函数">
+<meta name="twitter:card" content="summary">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml"/>
+  <link rel="icon" href="/favicon.png"/>
+  <link rel="stylesheet" href="//w3cbaymax.oss-cn-shanghai.aliyuncs.com/felib/fonts/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/css/style.css?t=1633697174314"/>
+<meta name="generator" content="Hexo 5.4.0"></head>
+  <body>
+    <div id="container">
+      <div id="wrap">
+<header id="header">
+  <div id="banner" style="background-image: url(&quot;/assets/you-might-not-need-vue-sfc/我可能不会爱你-题图.jpg&quot;)"></div>
+  <div class="outer" id="header-outer">
+    <div class="inner" id="header-title">
+      <h1 id="logo-wrap"><a href="/" id="logo">RAY</a></h1>
+      <h2 id="subtitle-wrap"><a href="/" id="subtitle"><span role="text">在平坦的路面上曲折前行</span></a></h2>
+    </div>
+    <div class="inner" id="header-inner">
+      <nav id="main-nav"><a class="nav-icon" id="main-nav-toggle"></a><a class="main-nav-link" href="/">首页</a><a class="main-nav-link" href="/archives">归档</a><a class="main-nav-link" href="/cv">简历</a>
+      </nav>
+      <nav id="sub-nav"><a class="nav-icon" id="nav-rss-link" href="/atom.xml" title="RSS 订阅"></a><a class="nav-icon" id="nav-search-btn" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap"><form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog-next.chenlei.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+        <div class="outer">
+          <section id="main">
+<article class="article article-typepost" id="post-barkjs/you-might-not-need-vue-sfc" itemscope="itemscope" itemprop="blogPost">
+  <div class="article-meta"><a class="article-date" href="/2018/02/11/barkjs/you-might-not-need-vue-sfc/">
+  <time datetime="2018-02-11T07:44:14.000Z" itemprop="datePublished">2018-02-11
+  </time></a>
+  </div>
+  <div class="article-inner">
+    <header class="article-header">
+<div class="flex-v-center-j-between">
+  <h1 class="article-title" itemprop="name">你可能不需要 *.vue
+  </h1><span class="article-serie-prefix mr-sm">barkjs</span>
+</div>
+    </header>
+    <div class="article-entry" itemprop="articleBody">
+<blockquote>
+<p>我只是要写个简单的 html 页面, 里面需要运行一些 js 来操作 DOM/BOM, 如果可能, 我希望利用 vue runtime</p>
+</blockquote>
+<span id="more"></span><p><strong>注意</strong>
+本文假设你已具有以下内容的相关知识或者实践经验:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">vue 单文件组件</a></li>
+<li><a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html">vue 渲染函数</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vuejs/babel-plugin-transform-vue-jsx">jsx(Vue)</a></li>
+<li><a href="pugjs.org">pug</a></li>
+<li><a target="_blank" rel="noopener" href="https://babeljs.io">babel 及其相关插件</a></li>
+</ul>
+<h2>VAR</h2>
+<p>毫无疑问, 2016 ~ 2017 是 <code>Vue</code> 势头最强劲的两年. 根据笔者的记忆, 2017 年, <code>Vue</code> 的在 Github 上的 Star 数目首次超过 4W, 彼时 <code>React</code> 的 star 数目还在 3W 内, <code>Angular</code> v2/v4 还在 beta 版本. 三大框架互相学习, 尽管粉丝间掐架不少, <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/63390665">利益相关的布道者</a>也上蹿下跳, 但 <code>Vue</code> 2 引入了 vdom, 在实现上, 摆脱源自 <code>Angular</code> 1.x 的模板概念; <code>Angular</code> 和 <code>Vue</code> 的作者之间还保持着互通有无的关系; React 升级后放弃了对 IE 8 的支持, 基于 S/P 模式的状态管理方案 <code>mobx</code> 在社区冉冉升起.</p>
+<p>时间步入 2018 年, VAR 三大框架在各方面的差异此消彼长, 甚至不约而同地对 <code>Typescript</code> 做了官方的支持. 如果你在同一时间在项目中对三个框架都有实践, 难免会生出&quot;万变不离其宗&quot;的感慨: 说到底, 大家都玩起了<strong>预编译</strong>和<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html">渲染纯函数</a>.</p>
+<p>进一步地说, <a target="_blank" rel="noopener" href="https://reactjs.org/docs/introducing-jsx.html"><code>*.jsx(React)</code></a> , angular 的组件 和 <a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html"><code>*.vue(sfc)</code></a>, 最终都会转化为 runtime 中对 DOM 不同的操作函数. 这一点在 <a target="_blank" rel="noopener" href="https://reactjs.org/docs/introducing-jsx.html"><code>*.jsx(React)</code></a> 中体现得淋漓尽致 —— 连 <code>*.jsx</code> 这种语法的诞生都是为了让 React 组件的 createElement/cloneElement 函数对开发者更友好; <code>Vue</code> 2 的<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html#ad">单文件组件(sfc)</a> 将其包装成了模板中的 <code>v-*</code> 指令、属性和事件绑定, 后来干脆也支持了 <a target="_blank" rel="noopener" href="https://github.com/vuejs/babel-plugin-transform-vue-jsx"><code>*.jsx(Vue)</code></a>. 无论 *.jsx 还是 sfc, 这些框架的 DSL 语法, 都是为了尽可能地减少(乃至彻底清除)自家框架在运行时解析特定指令的耗时, 同时能让开发者有良好的开发体验.</p>
+<h2>*.vue</h2>
+<p>对于 vue 新手而言, 直接在浏览器里引入完整版本的 vue.js 然后在 <code>&lt;script type=&quot;text/x-template&quot;&gt;&lt;/script&gt;</code> 中书写 <a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/components.html#X-Template">vue 的 template</a> 是不错的开始, 但这样会导致 vue 在运行时,</p>
+<ol>
+<li>先花费一部分时间去解析这段模板, 生成 vue 实例上的<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html">渲染纯函数</a></li>
+<li>运行这些<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html">渲染纯函数</a>, 处理 vue 实例中的 data 和 dom.</li>
+</ol>
+<p>其中的第 1 步, 通过使用<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">单文件组件(sfc)</a>是完全可以节省的.</p>
+<p>vue 的<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">单文件组件(sfc)</a> 是 xml 格式的文件, 经过 <code>Vue</code> 官方工具链的处理(如使用基于  vue-cli 的 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue-cli/blob/dev/docs/README.md#webpack">webpack</a> 的脚手架进行编译),后, 将变成可以在 <code>Vue</code> runtime 中运行的的一系列纯函数集. 详情可参考<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">这里</a>.</p>
+<p>如果你还没安装 <code>vue-cli</code> 并生成一个使用 <a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">单文件组件(sfc)</a> 来构建应用的脚手架, 你可以通过 <a target="_blank" rel="noopener" href="https://template-explorer.vuejs.org/">vue-template-explorer</a> 了解 vue template 和编译后的<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html">渲染纯函数</a>的联系.</p>
+<p><a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">单文件组件(sfc)</a> 的优势很多, 比如:</p>
+<ul>
+<li>通过 <code>webpack/browserify</code> 的配置, 可以安心地使用 typescript/<code>es201X</code> 的语法, 同时在编译后得到经过 polyfill 处理的、可以在 es5 环境下运行的代码</li>
+<li>使用 css 和 html 预编译器</li>
+<li>干净的组件内 scoped 特性.</li>
+<li>配合 <code>webpack/browserify</code>, 使用 <code>nodejs</code> 风格的模块管理.</li>
+</ul>
+<p>但在此前, <a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/single-file-components.html">单文件组件(sfc)</a> 有个缺陷, 即需要较为完整的 <code>vue-cli</code> 工具链的支持, 如果你只是想:</p>
+<blockquote>
+<ul>
+<li>写个简单的页面, 里面只有一个 ajax/fetch 请求, 根据返回结果, 在页面上渲染该结果</li>
+<li>使用 vue</li>
+<li>最好能够支持 jsx(Vue), 这样就不用</li>
+<li>能直接书写 es6/typescript 语法, 并且能预编译为 es5 兼容的 js</li>
+<li>还希望能够使用 less/stylus/scss/sass 来书写样式, 并预编译为合法的 css</li>
+</ul>
+</blockquote>
+<p>此时最快的途径, 似乎是使用 <code>vue-cli</code> 初始化一个 <a target="_blank" rel="noopener" href="https://github.com/vuejs-templates/webpack-simple">webpack-simple</a> 的项目, 然后修改 webpack 配置, 使得 <code>src/index.js</code> 在编译后被注入 <code>index.html</code>, 得到一个页面.....稍等, 这类似于有时候你只是想写个简单的窗体应用, 却不得不去下载一个带完整 MFC 的 Visual Studio 一样. 我真的想这样做么? 我很可能配置 webpack 到一半就放弃了, 转而新建一个 <code>index.html</code> 文件, 然后直接在 <code>&lt;script type=&quot;text/x-template&quot;&gt;&lt;/script&gt;</code> 里书写 vue 组件的模板, 然后运行起来 —— 尽管这样会引入完整的 <code>vue.js</code> 的文件(&gt; 100KB), 并且 vue 需要耗时去解析模板, 但是这样的开发效率, 非常高啊!</p>
+<h2>别的思路</h2>
+<p>即便是在 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue-component-compiler">vue-component-compiler</a> 发布以后, 社区依然缺乏直接在 <code>index.html</code> 中书写 vue 组件并且能进行预编译的方案.</p>
+<p>那么, 如果我们只是想写个简单的页面(就像 jQuery 盛行的时代中我们经常做的那样), 我们非得安装 <code>vue-cli</code>, 再初始化项目, 再安装庞大的 <code>webpack</code> 及其周边依赖么?</p>
+<p>也许 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 适合做这件事, 它允许你在 <code>index.html</code> 中直接引入相对路径下的 *.js 文件, 并根据 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 的配置(默认配置通常已足够你使用)合适地处理其中所有的资源, 包括 *.js 文件自身超前的语法(<code>es201X</code>) 和 css 预编译器.</p>
+<p>不过, 截至笔者书写到这里(北京时间 2018-02-11 17:14) 的时候, 根据 <strong>腾讯 imweb</strong> 的<a target="_blank" rel="noopener" href="http://imweb.io/topic/5a4451c3a192c3b460fce366">尝试</a>, <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 还有以下缺点:</p>
+<blockquote>
+<ul>
+<li>不支持SourceMap：在开发模式下，Parcel也不会输出SourceMap，目前只能去调试可读性极低的代码；</li>
+<li>不支持剔除无效代码(TreeShaking)：很多时候我们只用到了库中的一个函数，结果Parcel把整个库都打包了进来；</li>
+<li>一些依赖会让Parcel出错：当你的项目依赖了一些Npm上的模块时，有些Npm模块会让Parcel运行错误；</li>
+</ul>
+</blockquote>
+<p><strong>注意</strong> 实际上, 这些缺点在下文笔者介绍的方案中也存在. 相信以上问题 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 会在不久的未来解决.</p>
+<p>也许我们可以尝试用 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 来写一个简单的页面, 但如果你希望去了解 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 内部处理资源的细节, 对自己的项目有更多的了解, 又不必太符合 <a target="_blank" rel="noopener" href="https://github.com/parcel-bundler/parcel"><code>parcel</code></a> 的社区形象(开箱即用, 零配置). 此时, 似乎 webpack 又更吸引你(尽管它的配置相对繁冗, 但至少对开发者可见)</p>
+<p>有没有什么细节对开发者更为透明, 可以完全自己 DIY、不必造太多轮子的方案呢？如果抛开平时习惯 webpack/browserify 下的思维惯性, 整理一下, 其实真正帮助我们提高了效率的库是:</p>
+<ul>
+<li>babel/bubble</li>
+<li>JSX</li>
+<li>pugjs/ejs/swig</li>
+<li>stylus/less/scss/sass</li>
+</ul>
+<p>回到本文的初衷: &quot;我只是要写个简单的 html 页面, 里面需要运行一些 js 来操作 DOM/BOM, 如果可能, 我希望利用 vue runtime&quot;. 为了满足这个需求, 笔者认为, 至少要解决以下两个问题:</p>
+<ul>
+<li><input type="checkbox" disabled>   支持 js/css/html 预编译器</li>
+<li><input type="checkbox" disabled>   以 html 为入口, 直接在 html 中书写超前的的预编译器语法</li>
+</ul>
+<h3>预编译器处理的一种接口标准: jstransformer</h3>
+<p><a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 是一系列 <code>jstransformer-*</code> 的统称, <a target="_blank" rel="noopener" href="https://github.com/jstransformers/jstransformer">jstransformer</a> 的目的, 是统一 js(一般指nodejs) 社区中各类预编译器库的 API, 将不同思路、不同风格、不同目的, 但都基于 js、处理 js 或其它资源（比如 less/typescript）的库进行接口标准化. 参看其 github 上的 README:</p>
+<blockquote>
+<p>There are many good template engines and compilers written for Node.js. But there is a problem: all of them have slightly different APIs, requiring slightly different usage. JSTransformer unifies them into one standardized API. Code written for one transformer will work with any other transformer.</p>
+<p>(Node.js 社区中)有非常多好的模板引擎和模板编译器. 但是存在这样一个问题: 它们的 API 有些微差异, 用法有细微的不同. JSTransformer 将它们统一为标准的 API. 一个 transformer 应该能与另一个 transformer (以同样的 API)进行协作.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 要处理的目标很明确: <strong>预编译器</strong>, 比如下表中的这些预编译器</p>
+<table>
+<thead>
+<tr>
+<th>预编译器种类</th>
+<th style="text-align:left">典型库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>html 预编译器</td>
+<td style="text-align:left"><ul> <li>pug/jade</li> <li>ejs</li> <li>juice</li> <li>swig</li> </ul></td>
+</tr>
+<tr>
+<td>css 预编译器</td>
+<td style="text-align:left"><ul> <li>sass/scss</li> <li>stylus</li> <li>less</li> <li>postcss</li> </ul></td>
+</tr>
+<tr>
+<td>js 预编译器</td>
+<td style="text-align:left"><ul> <li>coffeescript</li> <li>babel</li> <li>typescript</li> </ul></td>
+</tr>
+</tbody>
+</table>
+<p><a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 让笔者想到 <a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/">webpack-loader</a> 概念. 尽管 <a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/">webpack-loader</a> 集成给 webpack 项目的类库不只是预编译器, 但在只讨论&quot;如何在项目中使用预编译器&quot;的语境下, <a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 可以类比于 <a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/">webpack-loader</a>.</p>
+<p>现在我们的第一个问题解决了</p>
+<ul>
+<li><input type="checkbox" disabled checked>   支持 js/css/html 预编译器</li>
+<li><input type="checkbox" disabled>   以 html 为入口, 直接在 html 中书写超前的的 js 语法(<code>es201X</code>)</li>
+</ul>
+<h3>直接在 HTML 中写预编译器语法</h3>
+<h4><strong>all-in-js</strong> ·PK· html-first</h4>
+<p>在考虑第二个问题之前, 先讨论一下目前社区对 html/css/js 前端三大基石的一种态度: <strong>all-in-js</strong></p>
+<p>前两年, React 社区有一种 <strong>all-in-js</strong> 的思路, 即 html 提供一个页面载入的入口,  把所有的资源(包括所有的 css 一些体积可接受的图片)打包到 js 中, 这种思路倾向于:</p>
+<ul>
+<li>如果不必要, css 可以完全不在 html 中书写(使用 <code>&lt;style&gt;</code> 标签)或引入(使用 <code>&lt;link&gt;</code> 标签)</li>
+<li>html 文件除了 head 中的 meta 属性需要做一些定制, 其余部分基本不重要, 反正打包后的 js 会在 html 中注入开发者需要的一切.</li>
+</ul>
+<p>这种思路和 <strong>React 单页应用(SPA)</strong> 的配合可谓天衣无缝, 不止资源, 业务逻辑也 <strong>all-in-js</strong> , 这似乎没什么问题. 但过去社区对 html 语义化的努力的成果在这种思路下被严重削弱了: 反正对 SEO 也不友好, 我为什么要语义化？并且, 这种思路对一些简单的需求(比如&quot;我就想写个静态页面, 里面有大量的静态元素, 就一个 input 中输入的内容需要被实时显示到另一个元素里&quot;)天然不太友好, 可能开发者只希望 vue 或者 React 处理页面中有动态渲染的元素, 其余相对静态的 DOM 元素留用于保持页面结构、语义表达(比如您现在正在阅读的这篇博客, 右边的标签列表就完全只是静态的 <code>ul &gt; li</code> 列表)</p>
+<p>现在, 无论你使用 <code>vue-cli</code> 还是 <code>create-react-app</code>, 这类工具都可以给你一个基于 webpack 的脚手架, 并鼓励你: <strong>all-in-(js/vue/react)</strong>, 把 <code>Vue</code>/<code>React</code> 的实例挂载到 body 元素下的一个根元素吧, 让 Vitural DOM 来为你处理一切...</p>
+<p>那么问题来了, 如果我现在只是想写一篇博客, 但博客里有一些演示性的片段, 它只占了页面中的一小部分元素, 比如<a href="/2018/01/20/fix-parse-date-error-in-chrome-50/" title="这篇文章">这篇文章</a>的末尾, 提供了一个小工具, 我希望使用 vue 来管理, 我可不希望把我所有的博客内容写在 vue 的组件里, 而是静态的 html, 毕竟, <strong>博客的文字是静态的</strong>.</p>
+<p>好, 现在我们写一个静态的 html 文件, 它可能是这样的:</p>
+<figure class="highlight html"><figcaption><span>样例博客</span><a target="_blank" rel="noopener" href="///assets/you-might-not-need-vue-sfc/sample-blog.html.raw">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">      我是博客中静态的问题, 博客内容的末尾会有一个使用 vue 来处理的、具有交互性的区域, 用于说明博客中讲解的内容.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;vue-app&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/x-template&quot;</span> <span class="attr">id</span>=<span class="string">&quot;component-tpl&quot;</span>&gt;</span><span class="handlebars"><span class="xml"></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">          我是具有交互性的内容</span></span></span><br><span class="line"><span class="xml"><span class="handlebars">          <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;inputstr&quot;</span> /&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">          <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">            我输入的值 </span><span class="template-variable">{{<span class="name">inputstr</span>}}</span><span class="xml"></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars">    </span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> inputstr = <span class="built_in">window</span>.preStr</span></span><br><span class="line"><span class="javascript">      <span class="keyword">if</span> (<span class="keyword">typeof</span> inputstr !== <span class="string">&#x27;string&#x27;</span>) {</span></span><br><span class="line"><span class="javascript">        inputstr = <span class="string">&#x27;&#x27;</span></span></span><br><span class="line"><span class="javascript">      }</span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> app = <span class="keyword">new</span> Vue({</span></span><br><span class="line"><span class="javascript">        <span class="attr">el</span>: <span class="string">&#x27;#vue-app&#x27;</span>,</span></span><br><span class="line"><span class="javascript">        data () {</span></span><br><span class="line"><span class="javascript">          <span class="keyword">return</span> {</span></span><br><span class="line"><span class="javascript">            inputstr</span></span><br><span class="line"><span class="javascript">          }</span></span><br><span class="line"><span class="javascript">        },</span></span><br><span class="line"><span class="javascript">        <span class="attr">template</span>: <span class="string">&#x27;#component-tpl&#x27;</span></span></span><br><span class="line"><span class="javascript">      })</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>看起来似乎没什么问题, 但实际上, 我已经无意识地使用了 es6 的语法: 在 Vue 实例的 <code>data()</code> 函数返回值中, 笔者竟然直接使用了 <code>inputstr</code> 变量名作为返回对象的 key 名! 这在 es6 中是没问题的, 但在 es5 环境下, 这样的语法会导致致命错误.</p>
+<p>在 webpack 环境下浸淫太久的开发者, 有时候可能忘记了某个特性是 es6 才支持的, 不自觉地在 html 的 <code>&lt;script&gt;</code> 标签中直接使用了. 比如, 笔者经常使用的 <code>Array.from</code> 是 es6 才支持的, 我希望能在 html 中毫无顾虑地使用它.</p>
+<p>此时, 可能你开始怀念 webpack 脚手架为你提供的便利: 配好好 <code>.babelrc</code> 和 <code>babal-loader</code>, 接下来在入口文件(可能命名为 <code>app.js</code>)及其引用文件中就可以放心地使用 <code>es201X</code> 的新特性. 不过等等, 其实我们只是需要 babel 对吧? 将 es6 编译为 es5 甚至 es3 的, 是 <strong>babel 而非 webpack 啊</strong>!</p>
+<p>真的只有 grunt/gulp/browserify/webpack/parcel 这些方案可以让我们毫无顾忌地书写 es6 语法么? 真的必须在 html 中引入一个入口文件再让 babel 处理么?明明我们只是需要 babel 来编译下 es6.</p>
+<p>有什么办法可以在 html 中书写的 javascript 直接被 babel 编译么?</p>
+<h3>基于 pug 的预编译器集成方案</h3>
+<p>一个在 html 中直接使用 js/css 预编译器的方案是, 通过 <a target="_blank" rel="noopener" href="https://pugjs.org/language/filters.html">pug filters 特性</a>, 在 HTML 中直接书写各种预编译器语法, 参看以下代码:</p>
+<figure class="highlight plaintext"><figcaption><span>pug filters 举例</span><a target="_blank" rel="noopener" href="///assets/you-might-not-need-vue-sfc/pug-filters.pug.raw">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line">  head</span><br><span class="line">  body</span><br><span class="line">    :markdown-it</span><br><span class="line">      我是博客中静态的问题, 博客内容的末尾会有一个使用 vue 来处理的、具有交互性的区域, 用于说明博客中讲解的内容.</span><br><span class="line"></span><br><span class="line">    #vue-app</span><br><span class="line"></span><br><span class="line">    script(type=&quot;text/x-template&quot; id=&quot;component-tpl&quot;).</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        我是具有交互性的内容</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">          &lt;input v-model=&quot;inputstr&quot; /&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">          我输入的值 {{inputstr}}</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;script&gt;</span><br><span class="line">      :babel</span><br><span class="line">        let inputstr = window.preStr</span><br><span class="line">        if (typeof inputstr !== &#x27;string&#x27;) {</span><br><span class="line">          inputstr = &#x27;&#x27;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        const app = new Vue({</span><br><span class="line">          el: &#x27;#vue-app&#x27;,</span><br><span class="line">          data () {</span><br><span class="line">            return {</span><br><span class="line">              inputstr</span><br><span class="line">            }</span><br><span class="line">          },</span><br><span class="line">          template: &#x27;#component-tpl&#x27;</span><br><span class="line">        })</span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://github.com/jstransformers/jstransformer-babel">jstransformer-babel</a> 是一个可以将 babel 接口的标准化中间件. 根据 <a target="_blank" rel="noopener" href="https://pugjs.org/language/filters.html">pug filters 特性</a>, 我可以在 pug 中书写一段 javascript, 将其置于一个 <code>:babel</code> filter block 中, 并提前安装好 <a target="_blank" rel="noopener" href="https://github.com/jstransformers/jstransformer-babel">jstransformer-babel</a>, 配置好 <code>.babelrc</code>, <a target="_blank" rel="noopener" href="https://github.com/jstransformers/jstransformer-babel">jstransformer-babel</a> 将自动帮我们把 es6 语法进行编码.</p>
+<h2>一个更轻量的方案</h2>
+<p>综合以上分析, 基于 <a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 和 <a href="pugjs.org">pug</a>, 抛开 <code>webpack</code> 或者 <code>parcel</code>, 我们一样可以完美书写 <code>es201X</code> 的语法(甚至 typescript/coffeescript). 实际上, <a href="/2018/01/20/fix-parse-date-error-in-chrome-50/" title="这篇文章">这篇文章</a> 就使用 pug 书写静态内容的, 文章中所有的交互性区域, 使用 vue 管理; 部分需要在页面中特定书写的 css, 使用 <code>stylus</code> 语法书写, 并由 <a target="_blank" rel="noopener" href="https://github.com/jstransformers/jstransformer-stylus">jstransformer-stylus</a> 进行编译.</p>
+<p>至此, 我们解决了第二个问题,</p>
+<ul>
+<li><input type="checkbox" disabled checked>   支持 js/css/html 预编译器</li>
+<li><input type="checkbox" disabled checked>   以 html 为入口, 直接在 html 中书写超前的的 js 语法(<code>es201X</code>)</li>
+</ul>
+<p>在这种方案中, 你可以自由地使用各种 <a target="_blank" rel="noopener" href="https://github.com/jstransformers">jstransformers</a> 的库来编译你内容, 如果这些库不符合你的需要, 你也可以编写自己的脚本, 使用你自定义的 pug-fitler, 并使用 node.js 来运行.</p>
+<p>为了更深入地讲解这种方案, 我写了一个<a target="_blank" rel="noopener" href="https://github.com/richardo2016/jstransformer_pug_sample">示例项目</a>, 并通过一个小系列来讨论一下这种方案的应用场景和它的局限性, 你可以从项目和系列文章中获得更多的关于这种方案的细节和应用场景. 如果你对这种项目感兴趣, 欢迎到项目 issue 中提出讨论, 或者发起 PR.</p>
+
+    </div>
+    <footer class="article-footer"><a class="article-share-link" data-url="http://blog-next.chenlei.me/2018/02/11/barkjs/you-might-not-need-vue-sfc/" data-id="ckuid44fm001apwnm5t1bbred">分享</a><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pug/" rel="tag">pug</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" rel="tag">纯函数</a></li></ul>
+    </footer>
+  </div>
+<nav id="article-nav"><a class="article-nav-link-wrap" id="article-nav-newer" href="/2018/03/04/simple-mac-app-compiled-with-gcc/"><strong class="article-nav-caption">Newer</strong>
+    <div class="article-nav-title">使用 GCC 编译简单的 Mac App
+    </div></a><a class="article-nav-link-wrap" id="article-nav-older" href="/2018/02/03/24-years-old/"><strong class="article-nav-caption">Older</strong>
+    <div class="article-nav-title">轮回
+    </div></a>
+</nav>
+</article>
+          </section>
+<aside class="http" id="sidebar">
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6/" rel="tag">es6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-fix/" rel="tag">js-fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-trick/" rel="tag">js-trick</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js-utils/" rel="tag">js-utils</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/json-iterator/" rel="tag">json-iterator</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meltdown/" rel="tag">meltdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/private/" rel="tag">private</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pug/" rel="tag">pug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rxjs/" rel="tag">rxjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B4%E8%AE%B0/" rel="tag">年记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" rel="tag">纯函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/es6/" style="font-size: 10px;">es6</a> <a href="/tags/golang/" style="font-size: 20px;">golang</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/js-fix/" style="font-size: 10px;">js-fix</a> <a href="/tags/js-trick/" style="font-size: 10px;">js-trick</a> <a href="/tags/js-utils/" style="font-size: 10px;">js-utils</a> <a href="/tags/json-iterator/" style="font-size: 10px;">json-iterator</a> <a href="/tags/meltdown/" style="font-size: 10px;">meltdown</a> <a href="/tags/private/" style="font-size: 10px;">private</a> <a href="/tags/pug/" style="font-size: 10px;">pug</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/%E5%B9%B4%E8%AE%B0/" style="font-size: 10px;">年记</a> <a href="/tags/%E7%BA%AF%E5%87%BD%E6%95%B0/" style="font-size: 10px;">纯函数</a> <a href="/tags/%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">翻译</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 20px;">随笔</a>
+    </div>
+  </div>
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/04/simple-mac-app-compiled-with-gcc/">使用 GCC 编译简单的 Mac App</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/11/barkjs/you-might-not-need-vue-sfc/">你可能不需要 *.vue</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/03/24-years-old/">轮回</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/28/pug-parser/">Pug 在线解析器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/21/left-displacement/">一路向西</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+</aside>
+        </div>
+<footer id="footer">
+  <div class="outer">
+    <div class="inner" id="footer-info">&copy;2021&nbsp;Xeon&nbsp;运行于&nbsp;<a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+      </div>
+<div id="mobile-nav"><a class="mobile-nav-link" href="/">首页</a><a class="mobile-nav-link" href="/archives">归档</a><a class="mobile-nav-link" href="/cv">简历</a>
+</div><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/js/script.js"></script>
+
+    </div>
+  </body>
+</html>
